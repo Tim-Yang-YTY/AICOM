@@ -15,7 +15,7 @@
 * _**COCO_MP**_ is the experimental dataset for our pipeline ablation study
 * **_new_monkeypox, new_normal, normal_face, normal_hands_** are the newly found images from various sources
 * _**6124_testing_dataset**_ is the dataset used for evaluate the existing monkeypox models' performance.
-## Codes Description
+## Code Description
 * `model.py`
   * `main()`: model training
   * `aug_new_found_img()`: augmenting method (13 folds) applied on newly found images (monkeypox images, healthy pictures, etc)
