@@ -1,4 +1,4 @@
-# AICOM 
+# AICOM _(AI Clinics On Mobile)_
 
 * Under the **Autonomous Mobile Clinics** initiative, we are developing **medical AI** technologies that can run on affordable mobile devices to enable **healthcare access in least developed countries (LDCs)**.![](images/AMC.jpg "Autonomous Mobile Clinics") 
 * In this project we aim to develop **AI-based disease screening mobile applications** for people in LDCs.
