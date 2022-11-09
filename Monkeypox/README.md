@@ -7,11 +7,11 @@
 
 
 ## AICOM_MP Model Usage
-* Download the weights [here](#Link_to_download_AICOM_MP_model_weight)
+* Download the weights from [Link_to_download_AICOM_MP_model_weight](#Link_to_download_AICOM_MP_model_weight)
 * `python model.py`
 
 ## Pipeline Usage
-* Download the necessary weights folders from [here](#Relevant_Github_Links) to the following position
+* Download the necessary weights folders from [Relevant_Github_Links](#Relevant_Github_Links) to the following position
   * _AICOM_
     * _Monkeypox_
       * _skin_seg_pretrained_
