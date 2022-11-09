@@ -8,8 +8,6 @@ from sklearn.metrics import confusion_matrix, classification_report
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-
-
 def predictor(model, test_gen):
     y_pred = []
     y_true = test_gen.labels
@@ -46,15 +44,13 @@ def predictor(model, test_gen):
 
 
 def main():
-    sdir = 'coco/'
+    testing_dir = '6124_testing_dataset'
     filepaths = []
     labels = []
-    classlist = os.listdir(sdir)
-    print(classlist)
-    classlist = classlist[:2]
+    classlist = [f for f in os.listdir(testing_dir) if not f.startswith('.')]
     print(classlist)
     for klass in classlist:
-        classpath = os.path.join(sdir, klass)
+        classpath = os.path.join(testing_dir, klass)
         flist = os.listdir(classpath)
         for f in flist:
             fpath = os.path.join(classpath, f)
@@ -74,9 +70,8 @@ def main():
                                                class_mode='categorical', color_mode='rgb', shuffle=False,
                                                batch_size=test_batch_size)
     model = tf.keras.models.load_model(
-        'monkey pox_100.0my_new_balanced_3_batch_size_48_3:54.h5')
+        'AICOM_MP.h5')
     errors, tests = predictor(model, test_gen)
-    subject = 'monkey pox'
     acc = str((1 - errors / tests) * 100)
     index = acc.rfind('.')
     acc = acc[:index + 3]

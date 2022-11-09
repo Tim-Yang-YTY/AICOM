@@ -2,15 +2,25 @@
 
 
 ## Datasets Description
-* **_AICOM_MP_dataset_not_balanced_**: Based on _**Augmented Images**_ with our additional Monkeypox/healthy images
+* **_AICOM_MP_dataset_not_balanced_**: Images from _**Augmented Images**_  and our Monkeypox/healthy images (augmented)
   * NOT balanced
 * **_balanced_df_train_**: images generated for balancing training dataset
   * `initial_balance_train()` function in `model.py`
 * **_balanced_df_val_test_**: images generated for balancing testing and validation dataset
   * `initial_balance_df()` function in `model.py`
 * _AICOM_MP_dataset_not_balanced_ + _balanced_df_train_ + _balanced_df_val_test_ = Final **_AICOM_MP_dataset_**
+* _**Augmented Images**_ and _**Original Images**_ are downloaded from [here](https://www.kaggle.com/datasets/nafin59/monkeypox-skin-lesion-dataset)
+* **_AICOM_LowRes1/2_** and _**AICOM_LowRes1/2_Restored**_ are datasets for the restoration experinments
+* _**sample(\_\*)**_ datasets demonstrate how our pipeline processes images
+* _**COCO_MP**_ is the experimental dataset for our pipeline ablation study
+* **_new_monkeypox, new_normal, normal_face, normal_hands_** are the newly found images from various sources
+* _**6124_testing_dataset**_ is the dataset used for evaluate the existing monkeypox models' performance.
 ## Codes Description
-
+* `model.py`
+  * `main()`: model training
+  * `aug_new_found_img()`: augmenting method (13 folds) applied on newly found images (monkeypox images, healthy pictures, etc)
+  * `create_testing_dataset()` or `model_create_testing_images.py`: augmenting method used to generate _**6124_testing_dataset**_
+* `model_testing.py`: evalute model's performance (define in `model`) on dataset of your choise (define in `testing_dir`)
 
 ## AICOM_MP Model Usage
 * Download the weights from [Link_to_download_AICOM_MP_model_weight](#Link_to_download_AICOM_MP_model_weight)

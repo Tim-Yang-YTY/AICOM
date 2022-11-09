@@ -508,7 +508,7 @@ def create_testing_dataset(classpath,working_dir='./'):
     print("#############################################################Finished#############################################################")
 
 
-def new_balance(classpath,working_dir='./'):
+def aug_new_found_img(classpath,working_dir='./'):
     flist = [f for f in os.listdir(classpath) if not f.startswith('.')]
     print(f'original length: {len(flist)}')
     aug_dir=os.path.join(working_dir, 'aug_new_normal_2')# directory to store augmented images
@@ -616,29 +616,6 @@ def new_balance(classpath,working_dir='./'):
         scaled_img=scaled_img.convert('RGB')
         scaled_img.save(
             aug_dir+'/' + img_name + '-13.jpg')
-
-
-
-
-def show_image_samples(gen):
-    t_dict=gen.class_indices
-    classes=list(t_dict.keys())
-    images,labels=next(gen) # get a sample batch from the generator
-    plt.figure(figsize=(20, 20))
-    length=len(labels)
-    if length<25:   #show maximum of 25 images
-        r=length
-    else:
-        r=25
-    for i in range(r):
-        plt.subplot(5, 5, i + 1)
-        image=images[i] /255
-        plt.imshow(image)
-        index=np.argmax(labels[i])
-        class_name=classes[index]
-        plt.title(class_name, color='blue', fontsize=14)
-        plt.axis('off')
-    plt.show()
 
 
 def predictor(model, test_gen, test_steps):
