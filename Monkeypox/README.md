@@ -13,4 +13,4 @@
 * [Resolution Restoration](https://github.com/microsoft/Bringing-Old-Photos-Back-to-Life/tree/master/Global)
 
 ## Link to download AICOM_MP model weight
-* https://mcgill-my.sharepoint.com/:u:/g/personal/tianyi_yang_mail_mcgill_ca/EXjzi4AU1ytKrsvaXsZf8jMBAtKZLOpZbzv4jorjOF3BCg?e=phPJkJ
+* [AICOM_MP](https://mcgill-my.sharepoint.com/:u:/g/personal/tianyi_yang_mail_mcgill_ca/EXjzi4AU1ytKrsvaXsZf8jMBAtKZLOpZbzv4jorjOF3BCg?e=phPJkJ)
