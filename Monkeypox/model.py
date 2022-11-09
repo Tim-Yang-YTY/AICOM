@@ -31,64 +31,9 @@ def add_noise(inputs, noise_factor=0.3):
     noisy = inputs + torch.randn_like(inputs) * noise_factor
     noisy = torch.clip(noisy, 0., 1.)
     return noisy
-def add_blur_noise_train(df,noise_factor=0.3,sigma=3):
-    aug_dir = os.path.join(r'./', 'noise_blur_aug_train3')  # directory to store augmented images
-
-    if os.path.isdir(aug_dir):  # start with an empty directory
-        shutil.rmtree(aug_dir)
-    os.mkdir(aug_dir)
-    for label in df['labels'].unique():
-        dir_path = os.path.join(aug_dir, label)
-        os.mkdir(dir_path)  # make class directories within aug directory
-    # create and store the augmented images
-    groups = df.groupby('labels')  # group by class
-    for label in df['labels'].unique():  # for every class
-        group = groups.get_group(label)  # a dataframe holding only rows with the specified label
-
-        target_dir = os.path.join(aug_dir, label)  # define where to write the images
-        save_path = target_dir
-        image_names = group['filepaths']
-
-        for image in image_names:
-
-            orig_img = Image.open(image)
-            blurred_img = T.GaussianBlur(kernel_size=(51,91), sigma=3)(orig_img)
-
-            noise_img = add_noise(T.ToTensor()(orig_img), 0.1)
-            noise_img = T.ToPILImage()(noise_img)
-
-
-            img_name = os.path.splitext(os.path.basename(image))[0]
-
-            blurred_img.save(
-                save_path + '/' + img_name + 'blured_sigma3.jpg')
-            noise_img.save(
-                save_path + '/' + img_name + 'noise_0.1.jpg')
-
-    aug_fpaths = []
-    aug_labels = []
-
-    classlist = os.listdir(aug_dir)
-    for klass in classlist:
-        classpath = os.path.join(aug_dir, klass)
-        flist = os.listdir(classpath)
-        for f in flist:
-            fpath = os.path.join(classpath, f)
-            aug_fpaths.append(fpath)
-            aug_labels.append(klass)
-    Fseries = pd.Series(aug_fpaths, name='filepaths')
-    Lseries = pd.Series(aug_labels, name='labels')
-    aug_df = pd.concat([Fseries, Lseries], axis=1)
-    df = pd.concat([df, aug_df], axis=0).reset_index(drop=True)
-    print('Length of augmented dataframe is now ', len(df))
-
-    return df
-
-
-
 
 class LR_ASK(keras.callbacks.Callback):
-    def __init__(self, model, epochs, ask_epoch):  # initialization of the callback
+    def __init__(self, model, epochs, ask_epoch):
         super(LR_ASK, self).__init__()
         self.model = model
         self.ask_epoch = ask_epoch
@@ -174,12 +119,10 @@ def initial_balance_df(df, n, working_dir, img_size):
     os.mkdir(aug_dir)
     for label in df['labels'].unique():
         dir_path=os.path.join(aug_dir,label)
-        os.mkdir(dir_path) # make class directories within aug directory
-    # create and store the augmented images
-    total = 0
+        os.mkdir(dir_path)
     gen = ImageDataGenerator(vertical_flip=True,  rotation_range=20, zoom_range=[.99, 1.01],brightness_range=[0.8, 1.2],
                              width_shift_range=.2,height_shift_range=.2, fill_mode = 'constant')
-    groups = df.groupby('labels')  # group by class
+    groups = df.groupby('labels')
     group1 = groups.get_group(df['labels'].unique()[0])
     group2 = groups.get_group(df['labels'].unique()[1])
     groups_len = [len(group1), len(group2)]
@@ -192,20 +135,15 @@ def initial_balance_df(df, n, working_dir, img_size):
         print(balance_len, balance_len_index, groups_diff, df['labels'].unique()[balance_len_index])
 
         group = groups.get_group(
-            df['labels'].unique()[balance_len_index])  # a dataframe holding only rows with the specified label
-        # determine how many samples there are in this class
-        # print(sample_count)
-        # exit()
-        # if the class has less than target number of images
+            df['labels'].unique()[balance_len_index])
         aug_img_count = 0
-        delta = groups_diff  # number of augmented images to create
-
-        target_dir = os.path.join(aug_dir, df['labels'].unique()[balance_len_index])  # define where to write the images
+        delta = groups_diff
+        target_dir = os.path.join(aug_dir, df['labels'].unique()[balance_len_index])
         print(target_dir)
         msg = '{0:40s} for class {1:^30s} creating {2:^5s} augmented images'.format(' ', df['labels'].unique()[
             balance_len_index], str(delta))
 
-        print(msg, '\r', end='')  # prints over on the same line
+        print(msg, '\r', end='')
 
         aug_gen = gen.flow_from_dataframe(group, x_col='filepaths', y_col=None, target_size=img_size,
                                           class_mode=None, batch_size=1, shuffle=False,
@@ -239,20 +177,17 @@ def initial_balance_df(df, n, working_dir, img_size):
 
 def initial_balance_train(df, n, working_dir, img_size):
     df = df.copy()
-    # df = add_blur_noise_train(df)
     print('Initial length of dataframe is ', len(df))
-    aug_dir = os.path.join(working_dir, 'balanced_train3')  # directory to store augmented images
-    if os.path.isdir(aug_dir):# start with an empty directory
+    aug_dir = os.path.join(working_dir, 'balanced_train3')
+    if os.path.isdir(aug_dir):
         shutil.rmtree(aug_dir)
     os.mkdir(aug_dir)
     for label in df['labels'].unique():
         dir_path=os.path.join(aug_dir,label)
-        os.mkdir(dir_path) # make class directories within aug directory
-    # create and store the augmented images
-    total = 0
+        os.mkdir(dir_path)
     gen = ImageDataGenerator(vertical_flip=True,  rotation_range=20, zoom_range=[.99, 1.01],brightness_range=[0.8, 1.2],width_shift_range=.2,
                              height_shift_range=.2, fill_mode = 'constant')
-    groups = df.groupby('labels')  # group by class
+    groups = df.groupby('labels')
     group1 = groups.get_group(df['labels'].unique()[0])
     group2 = groups.get_group(df['labels'].unique()[1])
     groups_len = [len(group1), len(group2)]
@@ -263,29 +198,22 @@ def initial_balance_train(df, n, working_dir, img_size):
         balance_len_index = groups_len.index(balance_len)
         print(len(group1), len(group2))
         print(balance_len, balance_len_index, groups_diff, df['labels'].unique()[balance_len_index])
-
         group = groups.get_group(
-            df['labels'].unique()[balance_len_index])  # a dataframe holding only rows with the specified label
-        # determine how many samples there are in this class
-        # print(sample_count)
-        # exit()
-        # if the class has less than target number of images
+            df['labels'].unique()[balance_len_index])
         aug_img_count = 0
-        delta = groups_diff  # number of augmented images to create
+        delta = groups_diff
 
-        target_dir = os.path.join(aug_dir, df['labels'].unique()[balance_len_index])  # define where to write the images
+        target_dir = os.path.join(aug_dir, df['labels'].unique()[balance_len_index])
         print(target_dir)
         msg = '{0:40s} for class {1:^30s} creating {2:^5s} augmented images'.format(' ', df['labels'].unique()[
             balance_len_index], str(delta))
 
-        print(msg, '\r', end='')  # prints over on the same line
-
+        print(msg, '\r', end='')
         aug_gen = gen.flow_from_dataframe(group, x_col='filepaths', y_col=None, target_size=img_size,
                                           class_mode=None, batch_size=1, shuffle=False,
                                           save_to_dir=target_dir, save_prefix='aug-', color_mode='rgb',
                                           save_format='jpg')
         while aug_img_count < delta:
-
             images = next(aug_gen)
             aug_img_count += len(images)
 
@@ -310,69 +238,30 @@ def initial_balance_train(df, n, working_dir, img_size):
     return df
 
 def add_s_p_noise(img):
-    # Getting the dimensions of the image
     row, col, _ = img.shape
-
-    # Randomly pick some pixels in the
-    # image for coloring them white
-    # Pick a random number between 300 and 10000
     number_of_pixels = random.randint(300, 10000)
     for i in range(number_of_pixels):
-        # Pick a random y coordinate
         y_coord = random.randint(0, row - 1)
-
-        # Pick a random x coordinate
         x_coord = random.randint(0, col - 1)
-
-        # Color that pixel to white
         img[y_coord][x_coord] = 255
-
-    # Randomly pick some pixels in
-    # the image for coloring them black
-    # Pick a random number between 300 and 10000
     number_of_pixels = random.randint(300, 10000)
     for i in range(number_of_pixels):
-        # Pick a random y coordinate
         y_coord = random.randint(0, row - 1)
-
-        # Pick a random x coordinate
         x_coord = random.randint(0, col - 1)
-
-        # Color that pixel to black
         img[y_coord][x_coord] = 0
-
     return img
 
 def add_s_p_noise_testing(img):
-    # Getting the dimensions of the image
     row, col, _ = img.shape
-
-    # Randomly pick some pixels in the
-    # image for coloring them white
-    # Pick a random number between 300 and 10000
     number_of_pixels = random.randint(1000, 5000)
     for i in range(number_of_pixels):
-        # Pick a random y coordinate
         y_coord = random.randint(0, row - 1)
-
-        # Pick a random x coordinate
         x_coord = random.randint(0, col - 1)
-
-        # Color that pixel to white
         img[y_coord][x_coord] = 255
-
-    # Randomly pick some pixels in
-    # the image for coloring them black
-    # Pick a random number between 300 and 10000
     number_of_pixels = random.randint(1000, 5000)
     for i in range(number_of_pixels):
-        # Pick a random y coordinate
         y_coord = random.randint(0, row - 1)
-
-        # Pick a random x coordinate
         x_coord = random.randint(0, col - 1)
-
-        # Color that pixel to black
         img[y_coord][x_coord] = 0
 
     return img
@@ -392,18 +281,14 @@ def create_testing_dataset(classpath,working_dir='./'):
     flist = [f for f in os.listdir(classpath) if not f.startswith('.')]
 
     print(f'original length: {len(flist)}')
-    aug_dir=os.path.join(working_dir, 'aug_testing_dataset_no_stretches/Others/')# directory to store augmented images
-    if os.path.isdir(aug_dir):# start with an empty directory
+    aug_dir=os.path.join(working_dir, 'aug_testing_dataset_no_stretches/Others/')
+    if os.path.isdir(aug_dir):
         shutil.rmtree(aug_dir)
     os.mkdir(aug_dir)
-
-
-
     '(1) Random rotation by a multiple of 90 degrees, ' \
     '(2) Random rotation in the range of-45 to 45 degrees,' \
     ' (3) Translation, (4) Reflection, (5) Shear, (6) Hue jitter, (7) Saturation jitter, (8) Brightness jitter, ' \
     '(9) Contrast jitter, (10) Salt and Pepper Noise, (11) Gaussian Noise, (12) Synthetic Blur and (13) Scaling.'
-
     for image in flist:
         print(f'########################Augmenting {image}##########################')
 
@@ -423,7 +308,7 @@ def create_testing_dataset(classpath,working_dir='./'):
             images = next(aug_gen)
 
             aug_img_count += len(images)
-        # exit()
+
         ################################################################################################################################################
         angle = [70,140,210,280,350]
         rotated_img = img.rotate(random.choice(angle), expand=True)
@@ -477,10 +362,6 @@ def create_testing_dataset(classpath,working_dir='./'):
         translated_img.save(
             aug_dir+'/' + img_name + '-testing-09.jpg')
         ################################################################################################################################################
-
-        # print(TF.to_tensor(img).unsqueeze_(0))
-        # exit()
-        # print(cv2.imread(image).shape)
         cv2.imwrite(aug_dir+'/' + img_name + '-testing-10.jpg',
                     add_s_p_noise_testing(cv2.imread(image)))
 
@@ -493,8 +374,6 @@ def create_testing_dataset(classpath,working_dir='./'):
 
         img_name = os.path.splitext(os.path.basename(image))[0]
 
-        # print(save_path)
-        # print(save_path+'/' + img_name + 'H%dS%.1fV%.1f' % (dH * h, 1 - dS * s, 1 - dV * v))
         blurred_img.save(
             aug_dir+'/' + img_name + '-testing-12.jpg')
         noise_img.save(
@@ -511,22 +390,14 @@ def create_testing_dataset(classpath,working_dir='./'):
 def aug_new_found_img(classpath,working_dir='./'):
     flist = [f for f in os.listdir(classpath) if not f.startswith('.')]
     print(f'original length: {len(flist)}')
-    aug_dir=os.path.join(working_dir, 'aug_new_normal_2')# directory to store augmented images
-    if os.path.isdir(aug_dir):# start with an empty directory
+    aug_dir=os.path.join(working_dir, 'aug_new_normal_2')
+    if os.path.isdir(aug_dir):
         shutil.rmtree(aug_dir)
     os.mkdir(aug_dir)
-
-    # create and store the augmented images
-
     '(1) Random rotation by a multiple of 90 degrees, ' \
     '(2) Random rotation in the range of-45 to 45 degrees,' \
     ' (3) Translation, (4) Reflection, (5) Shear, (6) Hue jitter, (7) Saturation jitter, (8) Brightness jitter, ' \
     '(9) Contrast jitter, (10) Salt and Pepper Noise, (11) Gaussian Noise, (12) Synthetic Blur and (13) Scaling.'
-
-
-     # group by class
-
-
     for image in flist:
         print(f'########################Augmenting {image}##########################')
 
@@ -588,10 +459,6 @@ def aug_new_found_img(classpath,working_dir='./'):
         translated_img.save(
             aug_dir+'/' + img_name + '-09.jpg')
         ################################################################################################################################################
-
-        # print(TF.to_tensor(img).unsqueeze_(0))
-        # exit()
-        # print(cv2.imread(image).shape)
         cv2.imwrite(aug_dir+'/' + img_name + '-10.jpg',
                     add_s_p_noise(cv2.imread(image)))
 
@@ -603,9 +470,6 @@ def aug_new_found_img(classpath,working_dir='./'):
         noise_img = T.ToPILImage()(noise_img).convert('RGB')
 
         img_name = os.path.splitext(os.path.basename(image))[0]
-
-        # print(save_path)
-        # print(save_path+'/' + img_name + 'H%dS%.1fV%.1f' % (dH * h, 1 - dS * s, 1 - dV * v))
         blurred_img.save(
             aug_dir+'/' + img_name + '-12.jpg')
         noise_img.save(
@@ -628,8 +492,8 @@ def predictor(model, test_gen, test_steps):
     tests = len(preds)
     for i, p in enumerate(preds):
         pred_index = np.argmax(p)
-        true_index = test_gen.labels[i]  # labels are integer values
-        if pred_index != true_index:  # a misclassification has occurred
+        true_index = test_gen.labels[i]
+        if pred_index != true_index:
             errors = errors + 1
         y_pred.append(pred_index)
 
@@ -639,7 +503,6 @@ def predictor(model, test_gen, test_steps):
     ytrue = np.array(y_true)
     if class_count <= 30:
         cm = confusion_matrix(ytrue, ypred)
-        # plot the confusion matrix
         plt.figure(figsize=(12, 8))
         sns.heatmap(cm, annot=True, vmin=0, fmt='g', cmap='Blues', cbar=False)
         plt.xticks(np.arange(class_count) + .5, classes, rotation=90)
@@ -708,13 +571,11 @@ def main():
         classlist.append(label)
         print('{0:^30s} {1:^13s}'.format(label, str(len(group))))
 
-    working_dir = r'./'  # directory to store augmented images
-    img_size = (224, 224)  # size of augmented images
-    batch_size = 64  # We will use and EfficientetB3 model, with image size of (200, 250) this size should not cause resource error
+    working_dir = r'./'
+    img_size = (224, 224)
+    batch_size = 64
     trgen = ImageDataGenerator()
     t_and_v_gen = ImageDataGenerator()
-    # msg = '{0:70s} for train generator'.format(' ')
-    # print(msg, '\r', end='')  # prints over on the same line
     train_gen = trgen.flow_from_dataframe(train_df, x_col='filepaths', y_col='labels', target_size=img_size,
                                           class_mode='categorical', color_mode='rgb', shuffle=True,
                                           batch_size=batch_size)
@@ -745,7 +606,7 @@ def main():
     x = Dropout(rate=.4, seed=13)(x)
     output = Dense(class_count, activation='softmax')(x)
     model = Model(inputs=base_model.input, outputs=output)
-    lr = .001  # start with this learning rate
+    lr = .001
     model.compile(Adamax(learning_rate=lr), loss='categorical_crossentropy', metrics=['accuracy'])
     epochs = 40
     ask_epoch = 80

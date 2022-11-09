@@ -1,3 +1,6 @@
+import os
+from PIL import Image
+
 def create_low_res(img_dir):
     classlist_train = [f for f in os.listdir(img_dir) if not f.startswith('.')]
     if not os.path.isdir('low_og_img_10'):

@@ -8,7 +8,6 @@ import torchvision.utils as vutils
 from IPython.display import Image
 import torch
 from torchvision import transforms
-from keras import backend as K
 import glob
 from restoration_models.mapping_model import Pix2PixHDModel_Mapping
 from semantic_segmentation import models
@@ -80,24 +79,6 @@ def resize(filename, size=(224, 224)):
     im_resized = im.resize(size, Image.ANTIALIAS)
     return (im_resized)
 
-
-def accuracy(y_true, y_pred):
-    '''Calculates the mean accuracy rate across all predictions for binary
-  classification problems.
-  '''
-    return K.mean(K.equal(y_true, K.round(y_pred)))
-
-
-def recall(y_true, y_pred):
-    '''Calculates the recall, a metric for multi-label classification of
-  how many relevant items are selected.
-  '''
-    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
-    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
-    recall = true_positives / (possible_positives + K.epsilon())
-    return recall
-
-
 def data_transforms(img, method=Image.BILINEAR, scale=False):
     ow, oh = img.size
     pw, ph = ow, oh
@@ -124,16 +105,11 @@ def save_output(read_image_name, pred, save_dir):
     predict_np = predict.cpu().data.numpy()
     predict_np[predict_np > 0.2] = 1
     predict_np[predict_np <= 0.2] = 0
-
-
     im = Image.fromarray(predict_np * 255).convert('RGB')
-
     image = cv2.imread(read_image_name)
     imo = im.resize((image.shape[1], image.shape[0]))
-
     pb_np = np.array(imo)
     perct = np.count_nonzero(pb_np == 0) / (pb_np.shape[0] * pb_np.shape[1] * pb_np.shape[2])
-    # image_reverse = cv2.bitwise_and(image, pb_np_reverse)
     if not perct >= 0.87:
         image = cv2.bitwise_and(image, pb_np)
 
@@ -148,12 +124,8 @@ def selective_mask_t(image_src, mask, channels=[]):
 
 
 def get_img_array(img_path, size):
-    # `img` is a PIL image of size 299x299
     img = tf.keras.preprocessing.image.load_img(img_path, target_size=size)
-    # `array` is a float32 Numpy array of shape (299, 299, 3)
     array = tf.keras.preprocessing.image.img_to_array(img)
-    # We add a dimension to transform our array into a "batch"
-    # of size (1, 299, 299, 3)
     array = np.expand_dims(array, axis=0)
     return array
 
@@ -161,8 +133,8 @@ def get_img_array(img_path, size):
 def main():
     opt = TestOptions().parse(save=False)
     model = Pix2PixHDModel_Mapping()
-    opt.serial_batches = True  # no shuffle
-    opt.no_flip = True  # no flip
+    opt.serial_batches = True
+    opt.no_flip = True
     opt.label_nc = 0
     opt.n_downsample_global = 3
     opt.mc = 64
