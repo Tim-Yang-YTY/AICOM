@@ -8,7 +8,7 @@
 
 ## AICOM_MP Model Usage
 * Download the weights [here](#Link_to_download_AICOM_MP_model_weight)
-* 
+* `python model.py`
 
 ## Pipeline Usage
 * Download the necessary weights folders from [here](#Relevant_Github_Links) to the following position
