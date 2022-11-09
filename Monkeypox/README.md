@@ -6,7 +6,7 @@
 ## Codes Description
 
 
-##AICOM_MP Model Usage
+## AICOM_MP Model Usage
 * Download the weights [here](#Link to download AICOM_MP model weight)
 * 
 
