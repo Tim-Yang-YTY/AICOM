@@ -17,6 +17,7 @@
       * _skin_seg_pretrained_
       * _u2net_human_seg.pth_
       * _checkpoints_
+  * `python vision_based_pipeline.py`
 ## Relevant_Github_Links
 * [Background Removal](https://github.com/xuebinqin/U-2-Net)
   * [Link](https://mcgill-my.sharepoint.com/:u:/g/personal/tianyi_yang_mail_mcgill_ca/EYQRUfCIf4RGi2YoxP8xXo8BpsJxZx_OML66KIgoWbk-2A?e=vzhXvK) to download U2 net weight.
