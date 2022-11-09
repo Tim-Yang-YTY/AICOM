@@ -2,7 +2,13 @@
 
 
 ## Datasets Description
-
+* **_AICOM_MP_dataset_not_balanced_**: Based on _**Augmented Images**_ with our additional Monkeypox/healthy images
+  * NOT balanced
+* **_balanced_df_train_**: images generated for balancing training dataset
+  * `initial_balance_train()` function in `model.py`
+* **_balanced_df_val_test_**: images generated for balancing testing and validation dataset
+  * `initial_balance_df()` function in `model.py`
+* _AICOM_MP_dataset_not_balanced_ + _balanced_df_train_ + _balanced_df_val_test_ = Final **_AICOM_MP_dataset_**
 ## Codes Description
 
 
