@@ -7,7 +7,7 @@
 
 
 ## AICOM_MP Model Usage
-* Download the weights [here](#Link to download AICOM_MP model weight)
+* Download the weights [here](#Link_to_download_AICOM_MP_model_weight)
 * 
 
 ## Pipeline Usage
@@ -24,5 +24,5 @@
   * [Link]() to download skin segmentation weight
 * [Resolution Restoration](https://github.com/microsoft/Bringing-Old-Photos-Back-to-Life/tree/master/Global)
   * [Link]() to download Resolution Restoration weight
-## Link to download AICOM_MP model weight
+## Link_to_download_AICOM_MP_model_weight
 * [AICOM_MP](https://mcgill-my.sharepoint.com/:u:/g/personal/tianyi_yang_mail_mcgill_ca/EXjzi4AU1ytKrsvaXsZf8jMBAtKZLOpZbzv4jorjOF3BCg?e=phPJkJ)
