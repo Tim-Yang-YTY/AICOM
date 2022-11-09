@@ -1,6 +1,6 @@
 # AICOM-MP
 
-![](/Users/timothy/Desktop/Timothy-2021-2022/health_ai/AICOM/Monkeypox/images/MP_screening_pipeline.png)
+![](images/MP_screening_pipeline.png)
 ## Datasets Description
 * **_AICOM_MP_dataset_not_balanced_**: Images from _**Augmented Images**_  and our Monkeypox/healthy images (augmented)
   * NOT balanced
