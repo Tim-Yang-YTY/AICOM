@@ -9,12 +9,12 @@
 * **_balanced_df_val_test_**: images generated for balancing testing and validation dataset
   * `initial_balance_df()` function in `model.py`
 * _AICOM_MP_dataset_not_balanced_ + _balanced_df_train_ + _balanced_df_val_test_ = Final **_AICOM_MP_dataset_**
-* _**Augmented Images**_ and _**Original Images**_ are downloaded from [here](https://www.kaggle.com/datasets/nafin59/monkeypox-skin-lesion-dataset)
-* **_AICOM_LowRes1/2_** and _**AICOM_LowRes1/2_Restored**_ are datasets for the restoration experinments
-* _**sample(\_\*)**_ datasets demonstrate how our pipeline processes images
-* _**COCO_MP**_ is the experimental dataset for our pipeline ablation study
-* **_new_monkeypox, new_normal, normal_face, normal_hands_** are the newly found images from various sources
-* _**6124_testing_dataset**_ is the dataset used for evaluate the existing monkeypox models' performance.
+* _**Augmented Images**_, _**Original Images**_: datasets downloaded from [here](https://www.kaggle.com/datasets/nafin59/monkeypox-skin-lesion-dataset)
+* **_AICOM_LowRes1/2_**, _**AICOM_LowRes1/2_Restored**_: datasets for the restoration experinments
+* _**sample(\_\*)**_: demo-datasets for demonstrating how our pipeline processes images
+* _**COCO_MP**_: experimental dataset for our pipeline ablation study
+* **_new_monkeypox, new_normal, normal_face, normal_hands_**: newly found images from various sources
+* _**6124_testing_dataset**_: dataset used for evaluate the existing monkeypox models' performance.
 ## Code Description
 * `model.py`
   * `main()`: model training
