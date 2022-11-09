@@ -21,6 +21,8 @@
   * `aug_new_found_img()`: augmenting method (13 folds) applied on newly found images (monkeypox images, healthy pictures, etc)
   * `create_testing_dataset()` or `model_create_testing_images.py`: augmenting method used to generate _**6124_testing_dataset**_
 * `model_testing.py`: evalute model's performance (define in `model`) on dataset of your choise (define in `testing_dir`)
+* `model_create_testing_images.py`: augmenting method used to generate _**6124_testing_dataset**_, same function as `create_testing_dataset()`
+* `vision_based_pipeline.py`: analytical pipeline for image processing/Monkeypox screening
 
 ## AICOM_MP Model Usage
 * Download the weights from [Link_to_download_AICOM_MP_model_weight](#Link_to_download_AICOM_MP_model_weight)
