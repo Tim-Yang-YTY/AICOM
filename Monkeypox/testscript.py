@@ -11,7 +11,7 @@ predictionKey1 = '8890ab6c61d649688cf22b12a81515da'
 it = ''
 
 results = []
-for i in range(1251,2304):
+for i in range(1,4):
     print(f"\033[1;32mImage testing_ds_others_img_{i}\033[0m")
     image = f"6124_testing_dataset/Others/testing_ds_others_img_{i}..jpg"
     row = [f"Image testing_ds_others_img_{i}"]
@@ -41,3 +41,4 @@ with open('predictions.csv', 'w', newline='') as f:
     writer = csv.writer(f)
     writer.writerow(["Image"] + ["Monkeypox", "Others", "Time"] * 5)
     writer.writerows(results)
+
